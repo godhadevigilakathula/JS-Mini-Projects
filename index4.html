@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle Theme Button</title>
+    <style>
+
+        body {
+           margin: 0;
+           transition: background 0.3s, color 0.3s;
+         }
+        .container {
+            height: 97vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        #toggle {
+        width: 120px;
+        height: 60px;
+        appearance: none;
+        background: black;
+        border-radius: 60px;
+        position: relative;
+        cursor: pointer;
+        outline: none;
+        transition: 0.3s;
+        }
+
+        #toggle::before {
+        content: "";
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 50%;
+        top: 5px;
+        left: 5px;
+        transition: transform 0.3s;
+        }
+
+        #toggle:checked {
+        background: #ccc;
+        }
+
+        #toggle:checked::before {
+        transform: translateX(60px);
+        }
+
+        .getTheme {
+        font-size: 500%;
+        }
+
+        .dark-mode {
+        background: #121212;
+        color: white;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="getTheme">Light Theme</span>
+        <input type="checkbox" id="toggle">
+    </div>
+
+    <script>
+        const toggleEl = document.querySelector("#toggle");
+        const getThemeEl = document.querySelector(".getTheme");
+
+        toggleEl.addEventListener("change", () => {
+
+        const isDark = document.body.classList.toggle("dark-mode");
+        getThemeEl.textContent = isDark ? "Dark Theme" : "Light Theme";   
+        
+        });
+    </script>
+</body>
+</html>

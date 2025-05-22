@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TODO List</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+            * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+                font-family: 'Roboto', sans-serif;
+                font-optical-sizing: auto;
+            }
+            .canvas {
+                display: grid;
+                place-content: center;
+                width: 100vw;
+                height: 100vh;
+                background-color: #f1fdff;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+                gap: 40px;
+                max-width: 720px;
+                align-items: center;
+                justify-content: center;
+            }
+            .btn-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 400px;
+                gap: 10px;
+            }
+            .btn-container button {
+                width: 200px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgb(255, 226, 189);
+                border: none;
+            }
+            #todo-form {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 10px;
+            }
+            input {
+                width: 300px;
+                height: 40px;
+                padding: 5px;
+                font-size: 14px;
+            }
+            button {
+                width: 300px;
+                height: 40px;
+                padding: 5px;
+                font-size: 14px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #task-list li {
+                display: flex;
+                gap: 20px;
+                list-style: none;
+                justify-content: justify-between;
+                align-items: center;
+            }
+            button.update, button.complete,
+            button.delete {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="canvas">
+            <div class="container">
+                <h2>To-Do Items</h2>
+                <form id="todo-form">
+                    <input
+                        type="text"
+                        id="task"
+                        placeholder="Please enter your task"
+                    />
+                    <button type="submit">Add Task</button>
+                </form>
+                <ul id="task-list"></ul>
+            </div>
+        </div>
+        <script>
+            // Add Task
+            // Clear the Input after submit
+            // Complete Task
+            // Remove Task
+            // Update Task
+
+            const formEl = document.querySelector("#todo-form");
+            const inputEl =document.querySelector("#task");
+            const taskListEl = document.querySelector("#task-list");
+
+            // Add Task Logic
+            function addTaskToLi(taskText) {
+                const li = document.createElement('li')
+                li.innerHTML = `
+                    <button class="update">📝</button>
+                    <span>${taskText}</span>
+                    <button class="complete">✅</button>
+                    <button class="delete">❌</button
+                `;
+                taskListEl.append(li);
+                inputEl.value = '';
+            }
+
+            // Save task to localStorage
+            function saveTasks() {
+                const tasks = Array.from(taskListEl.children).map(
+                    (li) => li.querySelector('span').textContent
+                );
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+
+            // Load tasks from localStorage
+            function loadTasks() {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || []
+                taskListEl.innerHTML = '';
+                tasks.forEach((item) => {
+                    addTaskToLi(item);
+                });
+            }
+
+            formEl.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const taskText = inputEl.value.trim();
+                if(taskText === "") return;
+
+                addTaskToLi(taskText);
+                saveTasks();
+            });
+
+            taskListEl.addEventListener("click", (e) => {
+                 const target = e.target;
+
+                 if(target.classList.contains("update")) {
+                    const span = target.nextElementSibling;
+                     if (target.textContent === "📝") {
+                        span.contentEditable = "true";
+                        span.focus();
+                        target.textContent = "💾";
+                    } 
+                    else {
+                        span.contentEditable = "false";
+                        target.textContent = "📝"; 
+                    }  
+                 }
+                 saveTasks();
+                
+                 if(target.classList.contains("complete")){
+                    target.previousElementSibling.style.color = 'green';
+                 }
+
+                 if(target.classList.contains("delete")){
+                    target.parentElement.remove();
+                 }
+                 saveTasks();
+            });
+
+
+        </script>
+    </body>
+</html>
